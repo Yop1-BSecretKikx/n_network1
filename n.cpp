@@ -1,36 +1,43 @@
-typedef struct y_v
-{
-    double y;
-}t_y_v;
+#include <iostream>
+#include <vector>
+#include <cstdlib>
 
-void get_res(t_y_v *y_res);
-void input_values(const std::vector<double>& x,const std::vector<double>& w, double b);
+void trainer(void);
 
 class neurone
 {
     private:
-    std::vector<double> entryX;
-    std::vector<double> withW;
-    double biais;
+        double x;
+        double y;
     public:
-    void input_values(const std::vector<double>& x,const std::vector<double>& w, double b)
-    {
-        entryX.resize(2,0.0);
-        withW.resize(2,0.0);
+    neurone(double x_,double y_) : x(x_),y(y_){}
+        void trainer(void)
+        {
+            double x1 = 0.1;
+            double x2 = 0.1;
+            double m1 = 0.1;
+            double m2 = 0.1;
 
-        entryX = x;
-        withW = w;
-        biais = b;
-    }
-    void get_res(t_y_v *y_res)
-    {
-        y_res->y = ((withW[0] * entryX[0]) + (withW[1] * entryX[1]) + biais);
-        if(y_res->y >= 0)
-        {
-            std::cout << "1";
-        }else
-        {
-            std::cout << "0";
+            double biais = 0.1;
+
+            double learning_marge = 3;
+            double res = x / y;
+            double n_r = 0.0;
+            while (std::abs(res - n_r) > 1e-6)
+            {
+                n_r = m1 * x1 + m2 * x2 + biais;
+                double err = res - n_r;
+
+                m1 += learning_marge * err * x1;
+                m2 += learning_marge * err * x2;
+                std::cout << n_r << std::endl;
+            }
+            std::cout << "Fastet Neural path and settings to find the result of : "<< x << "/" << y <<std::endl;
+            std::cout << "r = f("<<m1<<"*"<<x1<<")"<<"+"<<"("<<m2<<"*"<<x2<<")"<<"+"<<biais<<std::endl;
         }
-    }
 };
+int main()
+{
+    neurone n(6.0,2.0);
+    n.trainer();
+}
